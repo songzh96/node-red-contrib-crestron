@@ -1,0 +1,41 @@
+<script type="text/javascript">
+    RED.nodes.registerType('crestron-node', {
+        category: 'crestron',
+        color: '#ffffff',
+        defaults: {
+            cid: { value: "" },
+            ctype: { value: "Digital" },
+            name: { value: "" }
+        },
+        inputs: 1,
+        outputs: 1,
+        align: "left",
+        icon: "crestron.png",
+        label: function () {
+            return this.name || "crestron-node";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="crestron-node">
+    <div class="form-row">
+        <label for="node-input-id"><i class="icon-tag"></i> ID</label>
+        <input type="text" id="node-input-cid" placeholder="ID">
+    </div>
+    <div class="form-row">
+        <label for="node-input-ctype"><i class="icon-tag"></i> Type</label>
+        <select id="node-input-ctype">
+            <option selected="selected" value = "Digtal" >Digtal</option>
+            <option value = "Analog">Analog</option>
+            <option value = "Serial">Serial</option>
+        </select>
+    </div> 
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="crestron-node">
+    <p>A simple node that converts the message payloads into all crestron-node characters</p>
+</script>
