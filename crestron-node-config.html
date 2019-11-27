@@ -1,10 +1,9 @@
 <script type="text/javascript">
-    RED.nodes.registerType('crestronNode-config', {
+    RED.nodes.registerType('crestron-node-config', {
         category: 'config',
         defaults: {
-            host: { value: "", required: true },
-            port: { value: 7878, required: true, validate: RED.validators.number() },
-
+            host: { value: "127.0.0.1", required: true },
+            port: { value: 9999, required: true, validate: RED.validators.number() },
         },
         label: function () {
             return this.host + ":" + this.port;
@@ -12,7 +11,7 @@
     });
 </script>
 
-<script type="text/x-red" data-template-name="crestronNode-config">
+<script type="text/x-red" data-template-name="crestron-node-config">
     <div class="form-row">
         <label for="node-config-input-host"><i class="icon-bookmark"></i> Host</label>
         <input type="text" id="node-config-input-host">

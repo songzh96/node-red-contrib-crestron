@@ -3,6 +3,7 @@
         category: 'crestron',
         color: '#ffffff',
         defaults: {
+            server: {value: "", type: "tcp-server"},
             cid: { value: "" },
             ctype: { value: "Digital" },
             name: { value: "" }
@@ -18,6 +19,10 @@
 </script>
 
 <script type="text/x-red" data-template-name="crestron-node">
+    <div class="form-row">
+        <label for="node-input-server"><i class="icon-bookmark"></i> Server</label>
+        <input type="text" id="node-input-server">
+    </div>
     <div class="form-row">
         <label for="node-input-id"><i class="icon-tag"></i> ID</label>
         <input type="text" id="node-input-cid" placeholder="ID">
@@ -38,4 +43,46 @@
 
 <script type="text/x-red" data-help-name="crestron-node">
     <p>A simple node that converts the message payloads into all crestron-node characters</p>
+</script>
+
+
+<!-- tcp server config -->
+<script type="text/x-red" data-template-name="tcp-server">
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-config-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-host"><i class="icon-bookmark"></i> Host</label>
+        <input type="text" id="node-config-input-host">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-port"><i class="icon-bookmark"></i> Port</label>
+        <input type="text" id="node-config-input-port">
+    </div>    
+    <div class="form-row">  
+        <label for="node-config-input-reconnecttimeout"><i class="fa fa-clock-o"></i> Reconnect Interval (s)</label>
+        <input type="text" id="node-config-input-reconnecttimeout">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="tcp-server">
+    <p>Reconnect Interval allows the TCP connection to automatically reconnect after the interval has elapsed to re-establish a TCP connection.
+    Reconnect Interval is an optional input.  Leave blank if auto-reconnect is not desired. </p>
+</script>
+
+
+<script type="text/javascript">
+    RED.nodes.registerType('tcp-server', {
+        category: 'config',
+        defaults: {
+            name: {value: "", required: false},
+            host: {value: "127.0.0.1", required: true},
+            port: {value: 7878, required: true, validate: RED.validators.number()},
+            reconnecttimeout: {value: "", required: false}
+        },
+        label: function () {
+            return (this.name || "tcp@" + this.host + ":" + this.port);
+        }
+    });
 </script>

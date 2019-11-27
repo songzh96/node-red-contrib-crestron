@@ -1,9 +1,32 @@
 {
-    "name": "node-red-contrib-example-crestron-node",
-    "version": "0.1.0",
+    "name": "node-red-contrib-crestron",
+    "version": "0.0.1",
+    "description": "Node-RED nodes for communicating with a Crestron TCP Server.",
+    "dependencies": {
+      "compare-versions": "^3.3.0",
+      "debug": "^3.1.0",
+      "node-net-reconnect": "^0.1.1"
+    },
+    "engine": {
+      "node": ">=7.5.0"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/songzh96/node-red-contrib-crestron.git"
+    },
+    "keywords": [
+      "node-red",
+      "crestron"
+    ],
     "node-red": {
-        "nodes": {
-            "lower-case": "crestron-node.js"
-        }
-    }
-}
+      "nodes": {
+        "crestron-node": "crestron-node.js"
+      }
+    },
+    "author": "songzh",
+    "license": "MIT License",
+    "bugs": {
+      "url": "https://github.com/songzh96/node-red-contrib-crestron/issues"
+    },
+    "homepage": "https://github.com/songzh96/node-red-contrib-crestron/#readme"
+  }
