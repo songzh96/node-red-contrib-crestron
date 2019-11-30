@@ -1,138 +1,91 @@
 module.exports = function (RED) {
+  function CrestronNode(config) {
+    RED.nodes.createNode(this, config);
+    var node = this;
+    node.cid = config.cid || "1";
+    node.ctype = config.ctype || "Digital";
+    node.server = RED.nodes.getNode(config.server)
 
 
-    function TCPServerNode(config) {
-        RED.nodes.createNode(this, config);
-        this.host = config.host;
-        this.port = config.port;
-        this.reconnect = config.reconnect;
-        this.reconnecttimeout = config.reconnecttimeout;
-        this.crestronconn = null;
-        
-        this._state = 'disconnected';
-        
-        let Reconnect = require('node-net-reconnect/src/index.js')
-        
-        let node = this;
-        
-        //@ts-
-        let consettings = {
-          host: node.host,
-          port: node.port,
-        };
-        
-        let recon;
-    
-        node.initializeModbusTCPConnection = function(socket, onConnect,handler) {
-          timestamplog( `Connecting to tcpserver at ${node.host}:${node.port}`);
-    
-          if (Number(node.reconnecttimeout) > 0) {
-            consettings.autoReconnect = true;
-            consettings.reconnectTimeout = Number(node.reconnecttimeout) * 1000;
-            consettings.retryAlways = true;
-            consettings.retryTime = Number(node.reconnecttimeout) * 1000;
-          }
-          
-          node.crestronconn = new net.Socket();
-          
-          const _onConnectEvent = () => {
-            debug(`socket connected to ${socket.remoteAddress}:${socket.remotePort}`);
-            debug(`socket connected from ${socket.localAddress}:${socket.localPort}`)
-            
-            // Only node >= 9.11.0 will emit a ready, so force a 
-            // ready on connect for earlier releases.
-    
-            if (compver(process.versions.node,'9.11.0') >= 0){
-              this._state = 'connected';
+    node.setNodeStatus = ({ fill, shape, text }) => {
+      if (node.icountMessageInWindow == -999) return; // Locked out, doesn't change status.
+      // var dDate = new Date();
+      // 30/08/2019 Display only the things selected in the config
+
+      node.status({ fill: fill, shape: shape, text: text });
+    }
+
+
+    node.on('input', function (msg) {
+      if (typeof msg === "undefined") return;
+      if (!node.server) return;
+      if (node.server.linkStatus !== "connected") {
+        RED.log.error("CrestronNode: Lost link due to a connection error");
+        return; // 28/11/2019 If not connected, exit
+      }
+      // send Correct value to crestron professor
+      if (node.server) {
+        let value = msg.payload;
+        let tcpmsg;
+
+        switch (node.ctype) {
+          case "Digital":
+            {
+              if (Number(value) === 1 || Number(value) === 0) {
+                // data format
+                value = Boolean(value);
+                tcpmsg = String(node.ctype) + ":" + String(node.cid) + ":Set:" + String(value) + "*";
+                node.server.crestronConnection.write(tcpmsg);
+              }
+              else {
+                RED.log.warn("please fix your value,use 0/1 or true/false");
+                node.setNodeStatus({ fill: "yellow", shape: "dot", text: "ERROR DIGITAL VALUE" });
+              }
+              break;
             }
-            else{
-              this._state = 'ready';
+          case "Analog":
+            {
+              if (Number(value) <= 65535 && Number(value) >= 0) {
+                // data format
+                value = Math.round(Number(value));
+                tcpmsg = String(node.ctype) + ":" + String(node.cid) + ":Set:" + String(value) + "*";
+                node.server.crestronConnection.write(tcpmsg);
+              } else {
+                RED.log.warn("please fix your value,use 0-65535");
+                node.setNodeStatus({ fill: "yellow", shape: "dot", text: "ERROR ANALOG VALUE" })
+              }
+              break;
             }
-    
-          }
-          
-          const _onReadyEvent = () => {
-            // We only get a 'ready' emitted for 
-            // version 9.11.0 of node and higher
-            this._state = 'ready';
-            debug('socket ready');
-          }
-    
-          const _onCloseEvent = (hadError) => {
-            debug('socket closed. HadError = ', hadError);
-            this._state = 'disconnected';
-          }
-          
-          const _onErrorEvent = (err) => {
-            node.error(`socket error: ${err.name}: ${err.message}`)
-            debug(`socket error: ${err.name}: ${err.message}`)
-            this._state = 'error';
-            socket.destroy();
-            //socket.connect(consettings);
-          }
-          
-          
-          const _onTimeoutEvent = () => {
-            node.warn('socket timeout');
-            debug('socket timeout');
-          }
-            
-          socket.on('connect', _onConnectEvent);
-          socket.on('ready', _onReadyEvent);
-          socket.on('close', _onCloseEvent);
-          socket.on('error', _onErrorEvent);
-          socket.on('timeout', _onTimeoutEvent );
-        
-          reconn = new Reconnect(socket,consettings);
-        
-          socket.connect(consettings);
-    
-          handler(node.crestronconn);
-    
-          node.on("close", function() {
-            timestamplog(`Disconnecting from modbustcp slave at ${socket.remoteAddress}:${socket.remotePort}`);
-            socket.removeListener('connect', _onConnectEvent);
-            socket.removeListener('ready', _onReadyEvent);
-            socket.removeListener('close', _onCloseEvent);
-            socket.removeListener('error', _onErrorEvent);
-            socket.removeListener('timeout', _onTimeoutEvent );
-            reconn.end();
-          });
-      
-    
-        };
-    
-        node.getState = function() {
-          return this._state;
+          case "Serial":
+            {
+              tcpmsg = String(node.ctype) + ":" + String(node.cid) + ":Set:" + String(value) + "*";
+              node.server.crestronConnection.write(tcpmsg);
+              break;
+            }
+          default: return
         }
-    
+
+      }
+      else {
+        RED.log.error("crestron connection is lost");
       }
 
-    function CrestronNode(config) {
-        RED.nodes.createNode(this, config);
-        var node = this;
-        node.cid = config.cid || "1";
-        node.ctype = config.ctype || "Digital";
-        node.host = config.host;
-        node.port = config.port;
-        node.reconnect = config.reconnect;
-        node.reconnecttimeout = config.reconnecttimeout;
-        node.tcpconn = null;
-        node._state = 'disconnected';
-        let consettings = {
-            host: node.host,
-            port: node.port,
-        };
-        var value;
-        node.on('input', function (msg) {
-            value = msg.payload;
-            console.log(node.ctype + ":" + node.cid + ":Value:" + value + "*");
-            node.send(msg);
-        });
+    });
 
+    node.on('close', function () {
+      if (node.server) {
+        node.server.removeClient(node)
+      }
+    });
 
-        
+    if (node.server) {
+      node.server.removeClient(node);
+      if (node.cid) {
+        node.server.addClient(node);
+      }
 
-        
     }
+
+  }
+  RED.nodes.registerType("crestron-node", CrestronNode)
 }

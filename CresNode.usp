@@ -1,0 +1,215 @@
+#CATEGORY "46" "NodeRed" // Custom
+/*******************************************************************************************
+CresNode Module
+
+This is a functional protype of the CresNode module. Very basic! Save and Compile to use in
+your project.
+
+The module creates a TCP Server on the Creston system ,
+which communicates with the NodeRed CresNode Plugin using a plain text socket.
+
+The CresNode Plug communicates to the Server using three commands:
+
+Set - Sets the status
+Get - Gets the status from the Crestron system
+Event - Push a status change on the Crestron system to NodeRed
+
+*******************************************************************************************/
+
+#SYMBOL_NAME "CresNode"
+#HINT "CresNode Server"
+#DEFAULT_VOLATILE
+
+STRING_PARAMETER IPAddr$[16];
+INTEGER_PARAMETER Port;
+
+DIGITAL_INPUT 	_SKIP_, _SKIP_;
+DIGITAL_INPUT Digital_Value[10],_SKIP_; // Feedback for DIgital 
+DIGITAL_OUTPUT 	_SKIP_, _SKIP_;
+DIGITAL_OUTPUT Digital_True[10],Digital_False[10],_SKIP_; // Pulses Output - Modify code below if different behavior is needed 
+ANALOG_INPUT _SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_;
+ANALOG_INPUT Analog_Value[10],_SKIP_; //0 - 65535
+ANALOG_OUTPUT Analog_Set[10],_SKIP_;
+
+STRING_INPUT Serial_Value[10][1000];
+STRING_OUTPUT Serial_Set[10];
+SIGNED_INTEGER doServerConnected;
+String InternalRxBuffer[65000];
+TCP_SERVER MyServer[9999];
+
+#BEGIN_PARAMETER_PROPERTIES IPAddr$  // To restrict IP access, enter client IP in module.
+   propDefaultValue = "0.0.0.0";
+   propShortDescription = "Allow Connections from IP";
+#END_PARAMETER_PROPERTIES
+#BEGIN_PARAMETER_PROPERTIES Port
+   propValidUnits = unitDecimal;
+   propDefaultValue = 9999d;
+   propShortDescription = "Port";
+#END_PARAMETER_PROPERTIES
+
+
+function StartServer() {
+	SIGNED_INTEGER status;
+	status = SocketServerStartListen(MyServer, IPAddr$, Port);
+	if (status < 0) {
+		Print("Error listening to %s on port %u (status: %d)", IPAddr$, Port, status);
+	} else {
+        Print("Server started to %s on port %u (status: %d)", IPAddr$, Port, status);
+	}
+}
+
+function SocketTx(STRING ServerTx) {
+    signed_integer iStatus;
+
+    iStatus = SocketSend(MyServer, ServerTx);
+
+    if (iStatus < 0) {
+		Print("Error Sending to MyServer: %d\n", iStatus);
+    } else {
+		//Print("Sent %s\n", ServerTx);
+	}
+}
+
+function CmdBuilder(STRING Service, STRING ID, STRING Cmd, String Value) {
+	STRING CmdBuilder$[100];
+ 	CmdBuilder$ = Service + ":" + ID + ":" + Cmd + ":" + Value + "*";
+	SocketTx(CmdBuilder$); // Use a proper queue in future?
+}
+
+function CmdParser(STRING ServerRx) {
+    STRING Service[100];
+    STRING ID[100];
+	STRING Cmd[100];
+	STRING Value[100];
+	INTEGER IDInt, ValueInt;
+	INTEGER pulseTime;
+	String returnvalue$[100];
+  	INTEGER returnvalue;
+    INTEGER temp;
+
+	Service = REMOVE(":",ServerRx);
+   	Service = LEFT(Service, (Len(Service)-1));
+
+	ID = REMOVE(":",ServerRx);
+   	ID = LEFT(ID, (Len(ID)-1));
+    IDInt = Atoi(ID);
+
+	Cmd = REMOVE(":",ServerRx);
+   	Cmd = LEFT(Cmd, (Len(Cmd)-1));
+
+	Value = ServerRx;
+   	ValueInt = Atoi(Value);
+
+	// Command Router
+	Print("CmdParser: %s %d %s %d\n", Service, IDInt, Cmd, ValueInt);
+
+	//--------------------
+	// set Cmd
+	//--------------------
+	if (Service="Digital" && Cmd="Set") {
+		// On Pulse
+		if (ValueInt=1 && Digital_Value[IDInt]=0) { // Only pulse if light is off
+			Pulse(2,Digital_True[IDInt]);
+			    		
+		}
+		// Off Pulse
+		if (ValueInt=0 && Digital_Value[IDInt]=1) { // Only pulse if light is on
+			Pulse(2,Digital_False[IDInt]);
+			
+		}
+		
+	}
+	
+	if (Service="Analog" && Cmd="Set") {
+		 
+		 if (ValueInt>=0) {
+			 Analog_Set[IDInt] = ValueInt;			
+		  }
+	}
+
+	if (Service="Serial" && Cmd="Set") {
+		 Serial_Set[IDInt] = Value;
+	  }
+	
+
+	
+    //--------------------
+	// get Cmd (requested by NodeRed)
+	//--------------------
+    
+	// not support yet
+	//if (Service="Digital" && Cmd="get") {
+    	//CmdBuilder("Digital", ID, "event", LtoA(Digital_Value[IDInt]));
+	//}
+
+		
+}
+
+function SocketRx() {
+    String Temp$[65000];
+	//Print("InternalRxBuffer: %s\n", InternalRxBuffer);
+
+    WHILE (LEN(InternalRxBuffer) > 1) {
+		Temp$ = REMOVE("*",InternalRxBuffer);
+    	Temp$ = LEFT(Temp$, (Len(Temp$)-1));
+		CmdParser(Temp$);
+	}
+}
+
+//----------------
+// Change Events - When changes occur (a light bulb is turned on from a keypad), send "event" notification to update Homebridge.
+//----------------
+
+CHANGE Digital_Value {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	CmdBuilder("Digital", LtoA(ID), "Event", LtoA(Digital_Value[ID]));
+}
+CHANGE Analog_Value {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	CmdBuilder("Analog", LtoA(ID), "Event", LtoA(Analog_Value[ID]));
+}
+
+CHANGE Serial_Value {
+	INTEGER ID;
+	ID = GetLastModifiedArrayIndex();
+	CmdBuilder("Serial", LtoA(ID), "Event", Serial_Value[ID]);
+}  
+
+//----------------
+//SOCKET FUNCTIONS
+//----------------
+
+SOCKETCONNECT MyServer {
+    doServerConnected = 1;
+    Print("OnConnect: input buffer size is: %d\n", Len(MyServer.SocketRxBuf));
+}
+
+SOCKETDISCONNECT MyServer {
+	doServerConnected = 0;
+}
+
+SOCKETSTATUS MyServer {
+	SIGNED_INTEGER Status;
+    Status = SocketGetStatus();
+
+    Print("The SocketGetStatus returns:       %d\n", Status);
+    Print("The MyServer.SocketStatus returns: %d\n", MyServer.SocketStatus);
+}
+
+SOCKETRECEIVE MyServer {
+	InternalRxBuffer = InternalRxBuffer + MyServer.SocketRxBuf;
+	ClearBuffer(MyServer.SocketRxBuf);
+	SocketRx();
+}
+
+
+///////////// Initialization script
+Function Main() {
+	WaitForInitializationComplete();
+
+    StartServer();
+
+}
+

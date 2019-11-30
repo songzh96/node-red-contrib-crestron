@@ -3,9 +3,7 @@
     "version": "0.0.1",
     "description": "Node-RED nodes for communicating with a Crestron TCP Server.",
     "dependencies": {
-      "compare-versions": "^3.3.0",
-      "debug": "^3.1.0",
-      "node-net-reconnect": "^0.1.1"
+      "async": "^2.6.1"
     },
     "engine": {
       "node": ">=7.5.0"
@@ -20,7 +18,8 @@
     ],
     "node-red": {
       "nodes": {
-        "crestron-node": "crestron-node.js"
+        "crestron-node": "crestron-node.js",
+        "crestron-node-config": "crestron-node-config.js"
       }
     },
     "author": "songzh",
