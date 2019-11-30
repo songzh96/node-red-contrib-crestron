@@ -25,13 +25,17 @@ Accept Value is any String(length is depend crestron marco)
 3. install crestron-node `sudo npm install -g crestron-node`
 4. run node-red
 5. use crestron-node
+
    ![crestron-node](images/crestron-node.png)
 6. config Crestron Professor Server 
+
    ![crestron-node-server](images/server.png)
 7. Fill in the ID and choose the data type,Make sure to match the pins of Crestron's macro file
+   
    ![crestron-node-edit](images/edit.png)
 8. send the msg to the node
 9. Open Crestron SIMPL Software to edit CresNode 
+   
    ![crestron-node-edit](images/simpl.png)
 
 
@@ -40,5 +44,5 @@ Accept Value is any String(length is depend crestron marco)
 I created 50 nodes and sent 50 messages to the Crestron host every 1s, 
 which is equivalent to a message of 20ms. After a long test, the information was sent steadily
 
-![crestron-node](images/node-test.png)
+   ![crestron-node](images/node-test.png)
 
