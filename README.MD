@@ -1,4 +1,4 @@
-### Crestron-NodeRed
+# Crestron-NodeRed
 This is a NodeRed Plugin to Crestron Prefessor(Use Tcp Socket to commucation)
 
 The Plugin has 3 types,there is
@@ -19,13 +19,12 @@ Accept Value is any String(length is depend crestron marco)
 
 
 
-### How to use
+# How to use
 1. install nodejs and npm in your computer
 2. install node-red `sudo npm install -g node-red`
 3. install crestron-node `sudo npm install -g crestron-node`
 4. run node-red
 5. use crestron-node
-
    ![crestron-node](images/crestron-node.png)
 6. config Crestron Professor Server 
    ![crestron-node-server](images/server.png)
@@ -37,7 +36,7 @@ Accept Value is any String(length is depend crestron marco)
 
 
 
-### Test
+# Test
 I created 50 nodes and sent 50 messages to the Crestron host every 1s, 
 which is equivalent to a message of 20ms. After a long test, the information was sent steadily
 
