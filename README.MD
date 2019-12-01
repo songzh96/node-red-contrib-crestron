@@ -22,7 +22,7 @@ Accept Value is any String(length is depend crestron marco)
 # How to use
 1. install nodejs and npm in your computer
 2. install node-red `sudo npm install -g node-red`
-3. install crestron-node `sudo npm install -g crestron-node`
+3. install crestron-node `sudo npm install -g node-red-contrib-crestron`
 4. run node-red
 5. use crestron-node
 
@@ -39,6 +39,8 @@ Accept Value is any String(length is depend crestron marco)
    ![crestron-node-edit](images/simpl.png)
 
 
+### CHANGE LOG
+**V 1.0.0** First version
 
 # Test
 I created 50 nodes and sent 50 messages to the Crestron host every 1s, 
