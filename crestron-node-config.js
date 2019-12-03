@@ -91,7 +91,7 @@ module.exports = (RED) => {
 
             // If no clien nodes, disconnect from bus.
             if (node.nodeClients.length === 0) {
-                console.log(node.nodeClients.length);
+                
                 node.linkStatus = "disconnected";
                 node.Disconnect();
             }
@@ -170,14 +170,19 @@ module.exports = (RED) => {
                                     .forEach(input => {
                                         if (id === input.cid && type === input.ctype) {
                                             value = Number(value);
-                                            let msg = buildInputMessage(input.ctype, input.cid, "Event", value, input.name)
-                                            input.setNodeStatus({ fill: "green", shape: "dot", text: "Analog msg is coming" });
-                                            input.send(msg);
+                                            if (value >= 0 && value <= 65535)
+                                            {
+                                                let msg = buildInputMessage(input.ctype, input.cid, "Event", value, input.name)
+                                                input.setNodeStatus({ fill: "green", shape: "dot", text: "Analog msg is coming" });
+                                                input.send(msg);
+                                            }
+                                            else
+                                            {
+                                                RED.log.warn("Value is out of range");
+                                            }
+                                            
                                         }
-                                        else
-                                        {
-                                            return;
-                                        }
+                                        
                                     });
                                 break;
                             }

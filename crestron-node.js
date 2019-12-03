@@ -33,7 +33,7 @@ module.exports = function (RED) {
             {
               if (Number(value) === 1 || Number(value) === 0) {
                 // data format
-                value = Boolean(value);
+                value = Number(value);
                 tcpmsg = String(node.ctype) + ":" + String(node.cid) + ":Set:" + String(value) + "*";
                 node.server.crestronConnection.write(tcpmsg);
               }
