@@ -42,6 +42,9 @@ Accept Value is any String(length is depend crestron marco)
 ### CHANGE LOG
 **V 1.0.0** First version
 
+**V 1.0.1** Fixed no digital output
+
+
 # Test
 I created 50 nodes and sent 50 messages to the Crestron host every 1s, 
 which is equivalent to a message of 20ms. After a long test, the information was sent steadily
