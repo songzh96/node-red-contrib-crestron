@@ -56,7 +56,7 @@ module.exports = function (RED) {
               }
               break;
             }
-          case "Serial":
+          case "String":
             {
               tcpmsg = String(node.ctype) + ":" + String(node.cid) + ":Set:" + String(value) + "*";
               node.server.crestronConnection.write(tcpmsg);

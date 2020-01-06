@@ -11,7 +11,7 @@ Accept Value is true/false or 0/1
 
 Accept Value is 0-65535
 
-**Serial**
+**String**
 
 Accept Value is any String(length is depend crestron marco)
 
@@ -44,7 +44,7 @@ Accept Value is any String(length is depend crestron marco)
 
 **V 1.0.1** Fixed no digital output
 
-
+**V 1.0.2** add 10 inputs, "Serial -> String" , Added data type to label name for easy differentiation
 # Test
 I created 50 nodes and sent 50 messages to the Crestron host every 1s, 
 which is equivalent to a message of 20ms. After a long test, the information was sent steadily

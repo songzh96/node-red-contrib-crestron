@@ -13,7 +13,7 @@
         align: "left",
         icon: "crestron.png",
         label: function () {
-            return this.name || "crestron-node";
+            return this.name + " :" + this.ctype || "crestron-node";
         }
     });
 </script>
@@ -32,7 +32,7 @@
         <select id="node-input-ctype">
             <option value = "Digital" >Digital</option>
             <option value = "Analog">Analog</option>
-            <option value = "Serial">Serial</option>
+            <option value = "String">String</option>
         </select>
     </div> 
     <div class="form-row">
@@ -44,7 +44,7 @@
 <script type="text/x-red" data-help-name="crestron-node">
     <p>A simple node that converts the message payloads into crestron host</p>
     <p>DIGITAL, accept true/false</p>
-    <p>ANALOG, accept 0-65535</p>
-    <p>Serial, the str length depend crestron marco,defaults is 9999
+    <p>ANALOG,  accept 0-65535</p>
+    <p>STRING,  the str length depend crestron marco,defaults is 9999
     </p>
 </script>

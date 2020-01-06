@@ -186,14 +186,14 @@ module.exports = (RED) => {
                                     });
                                 break;
                             }
-                        case "Serial":
+                        case "String":
                             {
                                 
                                 node.nodeClients
                                     .forEach(input => {
                                         if (id === input.cid && type === input.ctype) {
                                             let msg = buildInputMessage(input.ctype, input.cid, "Event", value, input.name)
-                                            input.setNodeStatus({ fill: "green", shape: "dot", text: "Serial msg is coming" });
+                                            input.setNodeStatus({ fill: "green", shape: "dot", text: "String msg is coming" });
                                             input.send(msg);
                                         }
                                     });
