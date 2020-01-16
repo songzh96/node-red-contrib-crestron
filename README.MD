@@ -45,6 +45,9 @@ Accept Value is any String(length is depend crestron marco)
 **V 1.0.1** Fixed no digital output
 
 **V 1.0.2** add 10 inputs, "Serial -> String" , Added data type to label name for easy differentiation
+
+**V 1.0.3** Change node label, Easy to identify
+
 # Test
 I created 50 nodes and sent 50 messages to the Crestron host every 1s, 
 which is equivalent to a message of 20ms. After a long test, the information was sent steadily
