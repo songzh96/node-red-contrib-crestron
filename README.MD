@@ -3,7 +3,6 @@ I will keep updating.
 
 Thank you
 
-Thank you
 [![Donate via PayPal](https://img.shields.io/badge/Donate-PayPal-blue.svg?style=flat-square)](https://paypal.me/songzh96?locale.x=zh_XC)
 # NodeRed-Crestron
 This is a NodeRed Plugin to Crestron Prefessor(Use Tcp Socket to commucation)
