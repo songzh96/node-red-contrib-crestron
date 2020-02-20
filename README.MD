@@ -1,3 +1,10 @@
+If you think this project is very helpful to you, you can give this project a star⭐. You can also buy me a cup of coffee, hh (● '◡' ●)
+I will keep updating.
+
+Thank you
+
+Thank you
+[![Donate via PayPal](https://img.shields.io/badge/Donate-PayPal-blue.svg?style=flat-square)](https://paypal.me/songzh96?locale.x=zh_XC)
 # NodeRed-Crestron
 This is a NodeRed Plugin to Crestron Prefessor(Use Tcp Socket to commucation)
 
@@ -17,7 +24,7 @@ Accept Value is any String(length is depend crestron marco)
 
 **技术交流群：107927710，里面有很多大神呦**
 
-
+**PS:This is a free trial**
 
 # How to use
 1. install nodejs and npm in your computer
@@ -47,6 +54,8 @@ Accept Value is any String(length is depend crestron marco)
 **V 1.0.2** add 10 inputs, "Serial -> String" , Added data type to label name for easy differentiation
 
 **V 1.0.3** Change node label, Easy to identify
+
+**V 1.0.4** Update Demo
 
 # Test
 I created 50 nodes and sent 50 messages to the Crestron host every 1s, 
