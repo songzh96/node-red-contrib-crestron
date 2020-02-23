@@ -155,8 +155,15 @@ module.exports = (RED) => {
                                 node.nodeClients
                                     .forEach(input => {
                                         if (id === input.cid && type === input.ctype) {
-                                            
-                                            let msg = buildInputMessage(input.ctype, input.cid, "Event", Boolean(value), input.name)
+                                            if (Number(value) === 1)
+                                            {
+                                                value = true;
+                                            }
+                                            else
+                                            {
+                                                value = false;
+                                            }
+                                            let msg = buildInputMessage(input.ctype, input.cid, "Event", value, input.name)
                                             
                                             input.setNodeStatus({ fill: "green", shape: "dot", text: "Digital msg is coming" });
                                             input.send(msg);
