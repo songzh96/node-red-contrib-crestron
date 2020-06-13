@@ -2,9 +2,19 @@ If you think this project is very helpful to you, you can give this project a st
 I will keep updating.
 
 Thank you
+## **WARNING**
+It is not recommended to use the SIMPL 4.14 version, when I use it, it will cause some strange problems in the program (cause other macros to fail). So I rolled back the version to 4.11.
+
+This is My Software Version.
+
+**SIMPL** : simpl_windows_4.11.06.01.1
+
+**CRESTRON_DATABASE** : crestron_database_89.05.002.00
+
+**DEVICE_DATABASE** : device_database_115.00.002.00
 
 [![Donate via PayPal](https://img.shields.io/badge/Donate-PayPal-blue.svg?style=flat-square)](https://paypal.me/songzh96?locale.x=zh_XC)
-# NodeRed-Crestron
+# Nodered-Crestron
 This is a NodeRed Plugin to Crestron Prefessor(Use Tcp Socket to commucation)
 
 The Plugin has 3 types,there is
@@ -60,11 +70,24 @@ Accept Value is any String(length is depend crestron marco)
 
 **V 1.0.6** Support Crestron 2 Series Control System®
 
-**V 1.0.7** Support Crestron 4 Series Control System®
+**V 1.0.7** Support Crestron 4 Series Control System®(Will not continue to update for now)
 
-# Test
+**V 1.0.8** 
+1. Update README
+2. false signal not need FeedBack now 
+
+# TEST
 I created 50 nodes and sent 50 messages to the Crestron host every 1s, 
 which is equivalent to a message of 20ms. After a long test, the information was sent steadily
 
    ![crestron-node](images/node-test.png)
 
+
+# DEMO
+   ![crestron-node-demo](images/node-demo.jpg)
+
+
+```
+[{"id":"34261440.6a55fc","type":"crestron-node","z":"ff2337eb.0985b8","server":"52a4d5a6.b307cc","cid":"1","ctype":"Digital","name":"","x":330,"y":3420,"wires":[["f9e0f22e.47fed"]]},{"id":"4f260411.c27f4c","type":"inject","z":"ff2337eb.0985b8","name":"","topic":"","payload":"true","payloadType":"bool","repeat":"","crontab":"","once":false,"onceDelay":0.1,"x":170,"y":3380,"wires":[["34261440.6a55fc"]]},{"id":"5133cbb1.818fa4","type":"inject","z":"ff2337eb.0985b8","name":"","topic":"","payload":"false","payloadType":"bool","repeat":"","crontab":"","once":false,"onceDelay":0.1,"x":170,"y":3480,"wires":[["34261440.6a55fc"]]},{"id":"f9e0f22e.47fed","type":"debug","z":"ff2337eb.0985b8","name":"","active":true,"tosidebar":true,"console":false,"tostatus":false,"complete":"false","x":520,"y":3420,"wires":[]},{"id":"e6a48e93.8382","type":"crestron-node","z":"ff2337eb.0985b8","server":"52a4d5a6.b307cc","cid":"1","ctype":"Analog","name":"","x":320,"y":3600,"wires":[["88c34897.52f8f8"]]},{"id":"38457b10.e8e674","type":"inject","z":"ff2337eb.0985b8","name":"","topic":"","payload":"123","payloadType":"num","repeat":"","crontab":"","once":false,"onceDelay":0.1,"x":170,"y":3600,"wires":[["e6a48e93.8382"]]},{"id":"88c34897.52f8f8","type":"debug","z":"ff2337eb.0985b8","name":"","active":true,"tosidebar":true,"console":false,"tostatus":false,"complete":"false","x":510,"y":3600,"wires":[]},{"id":"1d423a1c.444716","type":"crestron-node","z":"ff2337eb.0985b8","server":"52a4d5a6.b307cc","cid":"1","ctype":"String","name":"","x":360,"y":3700,"wires":[["bbce66c1.5813f8"]]},{"id":"c605c078.97ddd","type":"inject","z":"ff2337eb.0985b8","name":"","topic":"","payload":"Hello World!","payloadType":"str","repeat":"","crontab":"","once":false,"onceDelay":0.1,"x":190,"y":3700,"wires":[["1d423a1c.444716"]]},{"id":"bbce66c1.5813f8","type":"debug","z":"ff2337eb.0985b8","name":"","active":true,"tosidebar":true,"console":false,"tostatus":false,"complete":"false","x":510,"y":3700,"wires":[]},{"id":"52a4d5a6.b307cc","type":"crestron-node-config","z":"","host":"192.168.1.10","port":"9999"}] 
+
+```
