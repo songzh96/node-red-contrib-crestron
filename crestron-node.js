@@ -27,43 +27,51 @@ module.exports = function (RED) {
       if (node.server) {
         let value = msg.payload;
         let tcpmsg;
-
-        switch (node.ctype) {
-          case "Digital":
-            {
-              if (Number(value) === 1 || Number(value) === 0) {
-                // data format
-                value = Number(value);
-                tcpmsg = String(node.ctype) + ":" + String(node.cid) + ":Set:" + String(value) + "*";
-                node.server.crestronConnection.write(tcpmsg);
-              }
-              else {
-                RED.log.warn("please fix your value,use 0/1 or true/false");
-                node.setNodeStatus({ fill: "yellow", shape: "dot", text: "ERROR DIGITAL VALUE" });
-              }
-              break;
-            }
-          case "Analog":
-            {
-              if (Number(value) <= 65535 && Number(value) >= 0) {
-                // data format
-                value = Math.round(Number(value));
-                tcpmsg = String(node.ctype) + ":" + String(node.cid) + ":Set:" + String(value) + "*";
-                node.server.crestronConnection.write(tcpmsg);
-              } else {
-                RED.log.warn("please fix your value,use 0-65535");
-                node.setNodeStatus({ fill: "yellow", shape: "dot", text: "ERROR ANALOG VALUE" })
-              }
-              break;
-            }
-          case "String":
-            {
-              tcpmsg = String(node.ctype) + ":" + String(node.cid) + ":Set:" + String(value) + "*";
-              node.server.crestronConnection.write(tcpmsg);
-              break;
-            }
-          default: return
+        if (value === "getState")
+        {
+          console.log(value)
+          tcpmsg = String(node.ctype) + ":" + String(node.cid) + ":get:" + String(value) + "*";
+          node.server.crestronConnection.write(tcpmsg);
         }
+        else{
+          switch (node.ctype) {
+            case "Digital":
+              {
+                if (Number(value) === 1 || Number(value) === 0) {
+                  // data format
+                  value = Number(value);
+                  tcpmsg = String(node.ctype) + ":" + String(node.cid) + ":Set:" + String(value) + "*";
+                  node.server.crestronConnection.write(tcpmsg);
+                }
+                else {
+                  RED.log.warn("please fix your value,use 0/1 or true/false");
+                  node.setNodeStatus({ fill: "yellow", shape: "dot", text: "ERROR DIGITAL VALUE" });
+                }
+                break;
+              }
+            case "Analog":
+              {
+                if (Number(value) <= 65535 && Number(value) >= 0) {
+                  // data format
+                  value = Math.round(Number(value));
+                  tcpmsg = String(node.ctype) + ":" + String(node.cid) + ":Set:" + String(value) + "*";
+                  node.server.crestronConnection.write(tcpmsg);
+                } else {
+                  RED.log.warn("please fix your value,use 0-65535");
+                  node.setNodeStatus({ fill: "yellow", shape: "dot", text: "ERROR ANALOG VALUE" })
+                }
+                break;
+              }
+            case "String":
+              {
+                tcpmsg = String(node.ctype) + ":" + String(node.cid) + ":Set:" + String(value) + "*";
+                node.server.crestronConnection.write(tcpmsg);
+                break;
+              }
+            default: return
+          }
+        }
+        
 
       }
       else {

@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-crestron",
-  "version": "1.0.7",
+  "version": "1.1.0",
   "description": "Node-RED nodes for communicating with a Crestron TCP Server.",
   "dependencies": {
     "async": "^2.6.1"
