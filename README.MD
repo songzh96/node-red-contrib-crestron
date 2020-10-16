@@ -63,7 +63,6 @@ Accept Value is any String(length is depend crestron marco)
 **V 1.0.2** add 10 inputs, "Serial -> String" , Added data type to label name for easy differentiation
 
 **V 1.0.3** Change node label, Easy to identify
-
 **V 1.0.4** Update Demo
 
 **V 1.0.5** fixed Digital Node ouput
@@ -77,6 +76,9 @@ Accept Value is any String(length is depend crestron marco)
 2. false signal not need FeedBack now 
 
 **V 1.1.0** Support Get FeedBack,Please check demo to know how to use
+
+**V 1.1.1** fixed the string problem,Thanks @gregjwinter found this bug.
+
 # TEST
 I created 50 nodes and sent 50 messages to the Crestron host every 1s, 
 which is equivalent to a message of 20ms. After a long test, the information was sent steadily
