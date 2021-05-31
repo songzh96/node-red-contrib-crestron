@@ -79,6 +79,8 @@ Accept Value is any String(length is depend crestron marco)
 
 **V 1.1.1** fixed the string problem,Thanks @gregjwinter found this bug.
 
+**V 1.1.2** update 4-series demo.
+
 # TEST
 I created 50 nodes and sent 50 messages to the Crestron host every 1s, 
 which is equivalent to a message of 20ms. After a long test, the information was sent steadily

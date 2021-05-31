@@ -1,0 +1,6 @@
+<Device Model="DIN-AP3">
+   <Network Type="Cresnet" Id="01"/>
+   <Network Type="Ethernet" Id="02">
+      <Device Model="Crestron_App" DeviceId="03" Name="Crestron App"/>
+   </Network>
+</Device>
